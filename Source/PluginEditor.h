@@ -67,5 +67,7 @@ private:
     float dragStartX = 0, dragStartY = 0, dragStartVal = 0;
     bool dragFine = false;
 
+    bool sizeReady = false;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (QuickVoxEditor)
 };

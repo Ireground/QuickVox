@@ -63,15 +63,18 @@ QuickVoxEditor::QuickVoxEditor (QuickVoxProcessor& p)
         { "output",   "OUTPUT",   R (532, 304, 204, 26),  64, 66, cPurple },
     };
 
+    // Read the saved size before setResizeLimits(): that call triggers resized() at the
+    // minimum size, which used to overwrite the saved scale.
+    const float s = juce::jlimit (0.75f, 2.5f, proc.uiScale.load());
     setResizable (true, true);
     setResizeLimits (W * 3 / 4, H * 3 / 4, W * 5 / 2, H * 5 / 2);
     if (auto* c = getConstrainer()) c->setFixedAspectRatio ((double) W / (double) H);
-    const float s = juce::jlimit (0.75f, 2.5f, proc.uiScale.load());
     setSize (juce::roundToInt (W * s), juce::roundToInt (H * s));
+    sizeReady = true;
     startTimerHz (30);
 }
 
-void QuickVoxEditor::resized() { proc.uiScale = uiScale(); }
+void QuickVoxEditor::resized() { if (sizeReady) proc.uiScale = uiScale(); }
 
 void QuickVoxEditor::timerCallback()
 {
